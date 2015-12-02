@@ -6,12 +6,20 @@
         "font-awesome": "latest",
         "animate.css": "latest",
         "angular": "latest",
-        "angular-route": "latest"
+        "angular-route": "latest",
+        "angular-resource": "latest"
     },
     "overrides": {
         "font-awesome": {
             "main": [
                 "css/font-awesome.css"
+            ]
+        },
+        "bootstrap": {
+            "main": [
+                "dist/js/bootstrap.js",
+                "dist/css/bootstrap.css",
+                "less/bootstrap.less"
             ]
         }
     }

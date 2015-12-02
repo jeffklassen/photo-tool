@@ -1,8 +1,8 @@
-weather.constant("BASEURL", {
+app.constant("BASEURL", {
     url: "/api"
 });
 
-weather.constant("HTTPMETHOD", {
+app.constant("HTTPMETHOD", {
     GET: 0,
     POST: 1,
 });
