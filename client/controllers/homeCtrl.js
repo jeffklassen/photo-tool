@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function ($scope, apiFactory) {
+app.controller('HomeCtrl', function ($scope) {
    $scope.header = 'sup';
 
 });

@@ -1,6 +1,10 @@
 var elasticsearch = require('elasticsearch');
 var crypto = require('crypto');
 
+var index = 'photo-tool';
+
+var emptyBasicSettings = { created: new Date()
+};
 
 function getClient() {
 
@@ -8,97 +12,52 @@ function getClient() {
     // load-balanced between them using round-robin
     return client = elasticsearch.Client({
         hosts: [
-        '192.168.1.41:9200',
-        '192.168.1.42:9200',
-        '192.168.1.43:9200',
-        '192.168.1.44:9200',
-        '192.168.1.45:9200'
-  ]
+            '192.168.1.41:9200',
+            '192.168.1.42:9200',
+            '192.168.1.43:9200',
+            '192.168.1.44:9200',
+            '192.168.1.45:9200'
+        ],
+        apiVersion: '1.7'
     });
 };
 
-var getLocations = function (callback) {
+exports.getSettings = function (callback) {
     var client = getClient();
-    client.search({
-        index: 'weather',
-        size: 60,
-        type: 'current_observation',
-        body: {
-            aggs: {
-                display_location: {
-                    nested: {
-                        path: "display_location"
-                    },
-                    aggs: {
-                        city: {
-                            terms: {
-                                field: "display_location.city"
-                            }
-                        }
-                    }
+    client.get({
+        index: index,
+        type: 'settings',
+        id: 'basic'
+    }, function (err, resp) {
+        if (err) {
+            console.warn(1, err);
+            
+            //if there was an error, we want to insert a dummy basic settings
+            client.indices.exists({ index: index + '/settings/basic' }, function (err, resp) {
+                console.warn(2, err, resp);
+                
+                if(err || resp == false){
+                    client.create(
+                        {index: index,
+                    type:'settings',
+                    id:'basic',
+                    body:emptyBasicSettings
+                    });
+                      
+                      callback(err, emptyBasicSettings);
                 }
-            }
+                else{
+                    callback(err);
+                }
+                
+              
+            });
         }
-    }).then(function (resp) {
-        console.log(resp.aggregations.display_location.city);
-        if (resp.hits.hits) {
-            if (callback) {
-                callback(resp.aggregations.display_location.city);
-            }
+        else{
+        callback(null, resp._source);
         }
-        client.close();
+
     });
 };
 
 
-var getMostRecent = function (city, count, callback) {
-    var client = getClient();
-    client.search({
-        index: 'weather',
-        size: count,
-        type: 'current_observation',
-        body: {
-            filter: {
-                nested: {
-                    path: "display_location",
-                    filter: {
-                        bool: {
-                            must: {
-                                term: {
-                                    "display_location.city": city
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-
-            sort: {
-                observation_epoch: {
-                    order: "desc"
-                }
-            }
-        },
-
-    }).then(function (resp) {
-        // console.log(resp);
-        if (resp.hits.hits) {
-            if (callback) {
-                callback(resp.hits.hits);
-            }
-        }
-        client.close();
-    });
-};
-
-/*getMostRecent("Ellicott City", function (hits) {
-
-    hits.forEach(function (hit) {
-        console.log(hit._source.observation_time_rfc822, hit._source.observation_epoch, hit._source.display_location.city);
-    });
-
-
-});*/
-
-module.exports.getLocations = getLocations;
-module.exports.getMostRecent = getMostRecent;

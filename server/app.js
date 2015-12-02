@@ -11,8 +11,8 @@ var api = require('./routes/api');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, '/views'));
-app.set('view engine', 'ejs');
+//app.set('views', path.join(__dirname, '/views'));
+//app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -41,22 +41,24 @@ app.set('json spaces', 2);
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res) {
         res.status(err.status || 500);
         res.send({
             message: err.message,
-            error: err
+            error: err,
+            id: 'first block in app.js'
         });
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     res.status(err.status || 500);
-    res.send( {
+    res.send({
         message: err.message,
-        error: {}
+        error: {},
+        id: 'second block in app.js'
     });
 });
 
