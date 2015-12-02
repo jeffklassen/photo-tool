@@ -1,0 +1,5 @@
+.bowerrc
+client/lib/
+typings/
+jsconfig.json
+Node_modules/
