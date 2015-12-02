@@ -1,0 +1,1 @@
+var app = angular.module('admin', ['ngRoute', 'ngTable', 'toaster', 'ngSanitize', 'googlechart']);
