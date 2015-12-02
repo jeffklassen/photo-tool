@@ -28,31 +28,33 @@ exports.getSettings = function (callback) {
     }, function (err, resp) {
         if (err) {
             console.warn(1, err);
-            
+
             //if there was an error, we want to insert a dummy basic settings
-            client.indices.exists({ index: index + '/settings/basic' }, function (err, resp) {
+            client.indices.exists({
+                index: index + '/settings/basic'
+            }, function (err, resp) {
                 console.warn(2, err, resp);
-                
-                var emptyBasicSettings = { created: new Date()};
-                if(err || resp == false){
-                    client.create(
-                        {index: index,
-                    type:'settings',
-                    id:'basic',
-                    body:emptyBasicSettings
+
+                var emptyBasicSettings = {
+                    created: new Date()
+                };
+                if (err || resp == false) {
+                    client.create({
+                        index: index,
+                        type: 'settings',
+                        id: 'basic',
+                        body: emptyBasicSettings
                     });
-                      
-                      callback(err, emptyBasicSettings);
-                }
-                else{
+
+                    callback(err, emptyBasicSettings);
+                } else {
                     callback(err);
                 }
-                
-              
+
+
             });
-        }
-        else{
-             callback(null, resp._source);
+        } else {
+            callback(null, resp._source);
         }
 
     });
