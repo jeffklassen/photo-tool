@@ -3,14 +3,11 @@ var crypto = require('crypto');
 
 var index = 'photo-tool';
 
-var emptyBasicSettings = { created: new Date()
-};
-
-function getClient() {
+var getClient = function () {
 
     // Connect the client to two nodes, requests will be
     // load-balanced between them using round-robin
-    return client = elasticsearch.Client({
+    return elasticsearch.Client({
         hosts: [
             '192.168.1.41:9200',
             '192.168.1.42:9200',
@@ -36,6 +33,7 @@ exports.getSettings = function (callback) {
             client.indices.exists({ index: index + '/settings/basic' }, function (err, resp) {
                 console.warn(2, err, resp);
                 
+                var emptyBasicSettings = { created: new Date()};
                 if(err || resp == false){
                     client.create(
                         {index: index,
@@ -54,10 +52,8 @@ exports.getSettings = function (callback) {
             });
         }
         else{
-        callback(null, resp._source);
+             callback(null, resp._source);
         }
 
     });
 };
-
-
