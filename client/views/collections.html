@@ -4,11 +4,11 @@
             <h1>{{header}}</h1>
         </div>
         <div>
-            {{collectionResource.collection}}
+            {{collection}}
             </div>
-        <div ng-show="collectionResource.collection === null" class="col-md-8">
+        <div ng-show="collection === null" class="col-md-8">
             <p class="bg-warning">You have not a default collection. You must create one before you continue.</p>
-           
+           <p ng-show="error.length >0" class="bg-danger"> {{error}} </p>
             <form ng-submit="trySubmit()" name="newCollectionForm">
                 <div class="form-group">
                     <label for="newCollectionRoot">Photo Collection Root</label>

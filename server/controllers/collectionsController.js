@@ -41,6 +41,6 @@ exports.saveCollection = function (collectionRootPath, req, res) {
 	catch(e)
 	{
 		res.status(500);
-		res.send("collection root path is not a valid directory.");
+		res.send("Collection root path is not a valid directory. " + collectionRootPath + " was not.");
 	}
 }
