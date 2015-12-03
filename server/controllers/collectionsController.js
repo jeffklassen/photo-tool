@@ -1,4 +1,7 @@
 var esclient = require('../data/esclient');
+var fs = require('fs');
+var os = require('os');
+var crypto = require('crypto');
 
 exports.getDefaultCollection = function (req, res) {
 	esclient.getDefaultCollection(function (err, resp) {
@@ -11,4 +14,32 @@ exports.getDefaultCollection = function (req, res) {
 };
 exports.listCollection = function (req, res) {
 	throw "not yet implemented";
+}
+exports.saveCollection = function (collectionRootPath, req, res) {
+	//remove trailing slashes
+	collectionRootPath = collectionRootPath.replace(/\/+$/, "");
+	if (fs.lstatSync(collectionRootPath).isDirectory()) {
+		var md5sum = crypto.createHash('md5');
+
+		var collection = {
+			rootPath: collectionRootPath,
+			hostname: os.hostname(),
+		};
+
+		md5sum.update(collection.rootPath + collection.hostname);
+		collection.id = md5sum.digest('hex');
+		console.log("Adding", collection);
+		
+		esclient.saveCollection(collection, function (err, resp) {
+			if (err) {
+				res.status(err.status || 500)
+				res.send({ err: err, resp: resp });
+			}
+			res.send({ collection: resp });
+		});
+	}
+	else {
+		res.status(500);
+		res.send("collection root path is not a valid directory.");
+	}
 }

@@ -7,10 +7,8 @@ router.get('/collections/default', function (req, res, next) {
 });
 
 router.post('/collections/', function (req, res, next) {
-    var location = req.params.location;
-    var count = req.params.count;
-    collectionsController.addCollections(req, res, location, count);
+    var collectionRootPath = req.body.collectionRootPath;
+    collectionsController.saveCollection(collectionRootPath, req, res);
 });
-
 
 module.exports = router;

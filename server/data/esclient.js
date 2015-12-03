@@ -81,7 +81,7 @@ exports.getDefaultCollection = function (callback) {
     }, function (err, resp) {
         if (err) {
             console.warn(1, err);
-           
+
         } else {
             console.warn(2, resp);
             if (resp.hits.total > 0) {
@@ -92,5 +92,21 @@ exports.getDefaultCollection = function (callback) {
             }
         }
 
+    });
+};
+
+exports.saveCollection = function (collection, callback) {
+    var client = getClient();
+    client.update({
+        index: index,
+        type: 'collections',
+        id: collection.id,
+        body: { doc: collection }
+    }, function (err, resp) {
+        if (err) {
+            console.warn(1, err);
+        } else {
+            callback(null, collection);
+        }
     });
 };

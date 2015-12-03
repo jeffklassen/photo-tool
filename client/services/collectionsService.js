@@ -1,21 +1,18 @@
-app.factory('CollectionsService', function($q, Collections) {
+app.factory('CollectionsService', function ($q, Collections) {
   return {
     getCollection: function (id) {
+      console.log('cservice', Collections.get({ id: id }));
       return Collections.get({ id: id });
     },
-    
-    listCollections: function() {
+
+    listCollections: function () {
       return Collections.list();
     },
 
-    saveCollections: function(collections) {
+    saveCollection: function (collectionRootPath) {
       var deferred = $q.defer();
-      collections.$save().then(function(collections) {
-        deferred.resolve(collections);
-      }, function(response) {
-        deferred.reject(response.data.reason);
-      });
-      return deferred.promise;
+
+      return Collections.save({ collectionRootPath: collectionRootPath });
     }
   }
 })
