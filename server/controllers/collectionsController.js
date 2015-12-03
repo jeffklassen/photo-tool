@@ -18,7 +18,7 @@ exports.listCollection = function (req, res) {
 exports.saveCollection = function (collectionRootPath, req, res) {
 	//remove trailing slashes
 	collectionRootPath = collectionRootPath.replace(/\/+$/, "");
-	if (fs.lstatSync(collectionRootPath).isDirectory()) {
+	try{fs.lstatSync(collectionRootPath).isDirectory()
 		var md5sum = crypto.createHash('md5');
 
 		var collection = {
@@ -38,7 +38,8 @@ exports.saveCollection = function (collectionRootPath, req, res) {
 			res.send({ collection: resp });
 		});
 	}
-	else {
+	catch(e)
+	{
 		res.status(500);
 		res.send("collection root path is not a valid directory.");
 	}

@@ -1,7 +1,6 @@
 app.factory('CollectionsService', function ($q, Collections) {
   return {
     getCollection: function (id) {
-      console.log('cservice', Collections.get({ id: id }));
       return Collections.get({ id: id });
     },
 

@@ -83,11 +83,13 @@ exports.getDefaultCollection = function (callback) {
             console.warn(1, err);
 
         } else {
-            console.warn(2, resp);
+            
             if (resp.hits.total > 0) {
-                callback(null, resp._source);
+                console.warn(2, resp.hits.hits[0]._source);
+                callback(null, resp.hits.hits[0]._source);
             }
             else {
+                console.warn(2, "No collections found, returning null.");
                 callback(null, null);
             }
         }
@@ -101,7 +103,7 @@ exports.saveCollection = function (collection, callback) {
         index: index,
         type: 'collections',
         id: collection.id,
-        body: { doc: collection }
+        body: { doc: collection, upsert: {} }
     }, function (err, resp) {
         if (err) {
             console.warn(1, err);
