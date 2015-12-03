@@ -9,6 +9,6 @@ app.config(function ($routeProvider) {
             templateUrl: '/client/views/collections.html'
         })
         .otherwise({
-            redirectTo: '/home'
+            redirectTo: '/collections'
         });
 });
