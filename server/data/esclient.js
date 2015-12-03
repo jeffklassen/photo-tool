@@ -59,3 +59,38 @@ exports.getSettings = function (callback) {
 
     });
 };
+
+exports.getDefaultCollection = function (callback) {
+    var client = getClient();
+    client.search({
+        index: index,
+        type: 'collections',
+        body: {
+            query: {
+                match_all: {}
+            },
+            size: 1,
+            sort: [
+                {
+                    _timestamp: {
+                        order: "desc"
+                    }
+                }
+            ]
+        }
+    }, function (err, resp) {
+        if (err) {
+            console.warn(1, err);
+           
+        } else {
+            console.warn(2, resp);
+            if (resp.hits.total > 0) {
+                callback(null, resp._source);
+            }
+            else {
+                callback(null, null);
+            }
+        }
+
+    });
+};

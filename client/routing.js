@@ -4,9 +4,9 @@ app.config(function ($routeProvider) {
             controller: 'HomeCtrl',
             templateUrl: '/client/views/home.html'
         })
-         .when('/settings', {
-            controller: 'SettingsCtrl',
-            templateUrl: '/client/views/settings.html'
+         .when('/collections', {
+            controller: 'CollectionsCtrl',
+            templateUrl: '/client/views/collections.html'
         })
         .otherwise({
             redirectTo: '/home'

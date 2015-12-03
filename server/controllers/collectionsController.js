@@ -1,11 +1,11 @@
 var esclient = require('../data/esclient');
 
-exports.getSettings = function (req, res) {
-	esclient.getSettings(function (err, resp) {
+exports.getCollections = function (req, res) {
+	esclient.getDefaultCollection(function (err, resp) {
 		if (err) {
 			res.status(err.status || 500)
 			res.send({ err: err, resp: resp });
 		}
-		res.send(resp)
+		res.send({ collection: resp });
 	});
 };

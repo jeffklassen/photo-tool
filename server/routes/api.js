@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
-var settingsController = require('../controllers/settingsController');
+var collectionsController = require('../controllers/collectionsController');
 
-router.get('/settings/', function (req, res, next) {
-    settingsController.getSettings(req, res);
+router.get('/collections/', function (req, res, next) {
+    collectionsController.getCollections(req, res);
 });
 
-router.post('/settings/', function (req, res, next) {
+router.post('/collections/', function (req, res, next) {
     var location = req.params.location;
     var count = req.params.count;
-    settingsController.addSettings(req, res, location, count);
+    collectionsController.addCollections(req, res, location, count);
 });
 
 
