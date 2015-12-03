@@ -1,6 +1,6 @@
 var esclient = require('../data/esclient');
 
-exports.getCollections = function (req, res) {
+exports.getDefaultCollection = function (req, res) {
 	esclient.getDefaultCollection(function (err, resp) {
 		if (err) {
 			res.status(err.status || 500)
@@ -9,3 +9,6 @@ exports.getCollections = function (req, res) {
 		res.send({ collection: resp });
 	});
 };
+exports.listCollection = function (req, res) {
+	throw "not yet implemented";
+}

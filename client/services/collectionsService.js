@@ -1,7 +1,11 @@
 app.factory('CollectionsService', function($q, Collections) {
   return {
-    getCollections: function() {
-      return Collections.query();
+    getCollection: function (id) {
+      return Collections.get({ id: id });
+    },
+    
+    listCollections: function() {
+      return Collections.list();
     },
 
     saveCollections: function(collections) {

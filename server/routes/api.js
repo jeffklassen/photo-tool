@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var collectionsController = require('../controllers/collectionsController');
 
-router.get('/collections/', function (req, res, next) {
-    collectionsController.getCollections(req, res);
+router.get('/collections/default', function (req, res, next) {
+    collectionsController.getDefaultCollection(req, res);
 });
 
 router.post('/collections/', function (req, res, next) {
