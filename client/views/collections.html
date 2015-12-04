@@ -1,18 +1,26 @@
 <div ng-controller="CollectionsCtrl">
     <div class="row">
         <div class="page-header">
-            <h1>{{header}}</h1>
+            <h1>Collections</h1>
         </div>
-        <div>
-            {{collection}}
+        <div class="row col-md-8">
+            <div ng-show="collection !== null" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{collection.rootPath}}</h3>
+                </div>
+                <div class="panel-body">
+                    Hostname: {{collection.hostname}}
+                </div>
             </div>
+        </div>
         <div ng-show="collection === null" class="col-md-8">
             <p class="bg-warning">You have not a default collection. You must create one before you continue.</p>
-           <p ng-show="error.length >0" class="bg-danger"> {{error}} </p>
+            <p ng-show="error.length >0" class="bg-danger"> {{error}} </p>
             <form ng-submit="trySubmit()" name="newCollectionForm">
                 <div class="form-group">
                     <label for="newCollectionRoot">Photo Collection Root</label>
-                    <input ng-disabled="newCollectionForm.$submitted" ng-model="newCollectionRoot" type="text" class="form-control" id="newCollectionRoot" placeholder="/path/to/photo/collection">
+                    <input ng-disabled="newCollectionForm.$submitted" ng-model="newCollectionRoot" type="text" class="form-control" id="newCollectionRoot"
+                    placeholder="/path/to/photo/collection">
                 </div>
 
                 <button ng-disabled="newCollectionForm.$submitted" type="submit" id="submit" class="btn btn-default">Submit</button>
