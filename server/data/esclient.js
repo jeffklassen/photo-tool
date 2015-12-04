@@ -19,46 +19,6 @@ var getClient = function () {
     });
 };
 
-exports.getSettings = function (callback) {
-    var client = getClient();
-    client.get({
-        index: index,
-        type: 'settings',
-        id: 'basic'
-    }, function (err, resp) {
-        if (err) {
-            console.warn(1, err);
-
-            //if there was an error, we want to insert a dummy basic settings
-            client.indices.exists({
-                index: index + '/settings/basic'
-            }, function (err, resp) {
-                console.warn(2, err, resp);
-
-                var emptyBasicSettings = {
-                    created: new Date()
-                };
-                if (err || resp == false) {
-                    client.create({
-                        index: index,
-                        type: 'settings',
-                        id: 'basic',
-                        body: emptyBasicSettings
-                    });
-
-                    callback(err, emptyBasicSettings);
-                } else {
-                    callback(err);
-                }
-
-
-            });
-        } else {
-            callback(null, resp._source);
-        }
-
-    });
-};
 
 exports.getDefaultCollection = function (callback) {
     var client = getClient();
@@ -83,7 +43,7 @@ exports.getDefaultCollection = function (callback) {
             console.warn(1, err);
 
         } else {
-            
+
             if (resp.hits.total > 0) {
                 console.warn(2, resp.hits.hits[0]._source);
                 callback(null, resp.hits.hits[0]._source);
@@ -97,18 +57,65 @@ exports.getDefaultCollection = function (callback) {
     });
 };
 
-exports.saveCollection = function (collection, callback) {
+exports.mostRecentAnalysis = function (collectionId, callback) {
+    var client = getClient();
+    client.search({
+        index: index,
+        type: 'analysis',
+        body: {
+            query: {
+                filtered: {
+                    query: {
+                        match_all: {}
+                    },
+                    filter: {
+                        term: {
+                            collectionId: collectionId
+                        }
+                    }
+                }
+            },
+                    size: 1,
+                    sort: [
+                        {
+                            _timestamp: {
+                                order: "desc"
+                            }
+                        }
+                    ]
+        }
+    }, function (err, resp) {
+        if (err) {
+            console.warn(1, err, resp);
+
+            callback(err, resp);
+        } else {
+
+            if (resp.hits.total > 0) {
+                console.warn(2, resp.hits.hits[0]._source);
+                callback(null, resp.hits.hits[0]._source);
+            }
+            else {
+                console.warn(2, "No collections found, returning null.");
+                callback(null, null);
+            }
+        }
+
+    });
+};
+
+exports.save = function (type, body, callback) {
     var client = getClient();
     client.update({
         index: index,
-        type: 'collections',
-        id: collection.id,
-        body: { doc: collection, upsert: {} }
+        type: type,
+        id: body.id,
+        body: { doc: body, upsert: {} }
     }, function (err, resp) {
         if (err) {
             console.warn(1, err);
         } else {
-            callback(null, collection);
+            callback(null, body);
         }
     });
 };

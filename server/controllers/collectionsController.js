@@ -9,7 +9,9 @@ exports.getDefaultCollection = function (req, res) {
 			res.status(err.status || 500)
 			res.send({ err: err, resp: resp });
 		}
-		res.send({ collection: resp });
+		else {
+			res.send({ collection: resp });
+		}
 	});
 };
 exports.listCollection = function (req, res) {
@@ -30,7 +32,7 @@ exports.saveCollection = function (collectionRootPath, req, res) {
 		collection.id = md5sum.digest('hex');
 		console.log("Adding", collection);
 		
-		esclient.saveCollection(collection, function (err, resp) {
+		esclient.save("collections", collection, function (err, resp) {
 			if (err) {
 				res.status(err.status || 500)
 				res.send({ err: err, resp: resp });

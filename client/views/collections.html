@@ -10,6 +10,21 @@
                 </div>
                 <div class="panel-body">
                     Hostname: {{collection.hostname}}
+                    <div ng-show="collection.analysis || collection.analysis === false">
+                       
+                            <h3>Analysis</h3>
+                   
+                        <div ng-show="collection.analysis === false" >
+                            Analysis has not yet been completed.
+                            
+                            <button ng-click="startAnalysis" class="btn btn-primary">Start</button>
+           
+                        </div>
+                        <div ng-show="collection.analysis !== false" >
+                            There is some analysis
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

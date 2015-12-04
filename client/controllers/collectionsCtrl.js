@@ -1,18 +1,28 @@
-app.controller('CollectionsCtrl', function ($scope, Collections, Session) {
+app.controller('CollectionsCtrl', function ($scope, Collections, Analysis, Session) {
     $scope.header = 'sup';
     $scope.error = "";
-    
+
     $scope.$watch('collection', function (collection) {
         if (typeof $scope.collection !== 'undefined' && $scope.collection !== null) {
+            // set session information
             var session = { collection: $scope.collection };
             console.log("Session created, returning session")
             Session.setSession(session);
+            
+            // load most recent analysis
+            Analysis.get({ collectionId: collection.id }).$promise.then(function (resp) {
+                console.log("HERE", resp);
+                if (typeof resp.analysis !== 'undefined' && resp.analysis !== null) {
+                    $scope.collection.analysis = resp.analysis;
+                }
+                else {
+                    $scope.collection.analysis = false;
+                }
+            });
         }
     });
     Collections.get({ id: 'default' }).$promise.then(function (resp) {
         $scope.collection = resp.collection;
-
-
     });
 
     //console.log($scope.collection)
@@ -27,6 +37,10 @@ app.controller('CollectionsCtrl', function ($scope, Collections, Session) {
             $scope.error = err.data;
             $scope.newCollectionForm.$submitted = false;
         });
-    }
+    };
+    
+    $scope.startAnalysis = function () {
+        Analysis.start({ collectionId: $scope.collection.id });
+    };
 
 });

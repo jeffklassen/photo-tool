@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var collectionsController = require('../controllers/collectionsController');
+var analysisController = require('../controllers/analysisController');
+
+
+router.get('/analysis/:collectionId', function (req, res, next) {
+    analysisController.getMostRecent(req.params.id,req, res);
+});
 
 router.get('/collections/default', function (req, res, next) {
     collectionsController.getDefaultCollection(req, res);
