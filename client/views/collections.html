@@ -17,11 +17,12 @@
                         <div ng-show="collection.analysis === false" >
                             Analysis has not yet been completed.
                             
-                            <button ng-click="startAnalysis" class="btn btn-primary">Start</button>
+                            <button ng-click="startAnalysis()" class="btn btn-primary">Start</button>
            
                         </div>
                         <div ng-show="collection.analysis !== false" >
                             There is some analysis
+                            {{collection.analysis}}
                         </div>
                     </div>
 

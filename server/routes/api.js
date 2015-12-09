@@ -5,7 +5,11 @@ var analysisController = require('../controllers/analysisController');
 
 
 router.get('/analysis/:collectionId', function (req, res, next) {
-    analysisController.getMostRecent(req.params.id,req, res);
+    analysisController.getMostRecent(req.params.collectionId, req, res);
+});
+router.post('/analysis/', function (req, res, next) {
+    console.log(req.body);
+    analysisController.start(req.body.collectionId, req, res);
 });
 
 router.get('/collections/default', function (req, res, next) {

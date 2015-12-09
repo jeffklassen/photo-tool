@@ -7,15 +7,17 @@
   },
   "dependencies": {
     "angular": "^1.4.8",
+    "async": "^1.5.0",
     "body-parser": "^1.14.1",
     "cookie-parser": "^1.4.0",
     "debug": "^2.2.0",
+    "diskusage": "^0.1.4",
     "ejs": "^2.3.4",
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
     "morgan": "^1.6.1",
-    "serve-favicon": "^2.3.0",
-    "underscore": "^1.8.3"
+    "path-exif-mapper": "^0.2.1",
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

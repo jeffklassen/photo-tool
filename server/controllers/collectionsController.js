@@ -37,7 +37,9 @@ exports.saveCollection = function (collectionRootPath, req, res) {
 				res.status(err.status || 500)
 				res.send({ err: err, resp: resp });
 			}
-			res.send({ collection: resp });
+			else {
+				res.send({ collection: resp });
+			}
 		});
 	}
 	catch(e)

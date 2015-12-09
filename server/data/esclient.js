@@ -19,6 +19,25 @@ var getClient = function () {
     });
 };
 
+exports.get = function (type, id, callback) {
+    var client = getClient();
+    console.log(type, id);
+    client.get({
+        index: index,
+        type: type,
+        id: id
+    }, function (err, resp) {
+        if (err) {
+            console.warn(1, err);
+
+        } else {
+            console.warn(2, err, resp);
+
+            callback(null, resp._source);
+        }
+
+    });
+};
 
 exports.getDefaultCollection = function (callback) {
     var client = getClient();
@@ -75,14 +94,14 @@ exports.mostRecentAnalysis = function (collectionId, callback) {
                     }
                 }
             },
-                    size: 1,
-                    sort: [
-                        {
-                            _timestamp: {
-                                order: "desc"
-                            }
-                        }
-                    ]
+            size: 1,
+            sort: [
+                {
+                    _timestamp: {
+                        order: "desc"
+                    }
+                }
+            ]
         }
     }, function (err, resp) {
         if (err) {
@@ -96,7 +115,7 @@ exports.mostRecentAnalysis = function (collectionId, callback) {
                 callback(null, resp.hits.hits[0]._source);
             }
             else {
-                console.warn(2, "No collections found, returning null.");
+                console.warn(2, "No analysis found, returning null.");
                 callback(null, null);
             }
         }
