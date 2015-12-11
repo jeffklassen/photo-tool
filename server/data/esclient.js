@@ -1,6 +1,12 @@
 var elasticsearch = require('elasticsearch');
 var crypto = require('crypto');
 
+process.on('message', function (msg) {
+    if (msg.photo) {
+        exports.save("photos", msg.photo, function () { process.send({}); process.exit(0);});
+    }
+});
+
 var index = 'photo-tool';
 
 var getClient = function () {
@@ -15,7 +21,7 @@ var getClient = function () {
             '192.168.1.44:9200',
             '192.168.1.45:9200'
         ],
-        apiVersion: '1.7'
+        apiVersion: '2.1'
     });
 };
 
@@ -48,14 +54,7 @@ exports.getDefaultCollection = function (callback) {
             query: {
                 match_all: {}
             },
-            size: 1,
-            sort: [
-                {
-                    _timestamp: {
-                        order: "desc"
-                    }
-                }
-            ]
+            size: 1
         }
     }, function (err, resp) {
         if (err) {
@@ -94,14 +93,7 @@ exports.mostRecentAnalysis = function (collectionId, callback) {
                     }
                 }
             },
-            size: 1,
-            sort: [
-                {
-                    _timestamp: {
-                        order: "desc"
-                    }
-                }
-            ]
+            size: 1
         }
     }, function (err, resp) {
         if (err) {
@@ -133,6 +125,7 @@ exports.save = function (type, body, callback) {
     }, function (err, resp) {
         if (err) {
             console.warn(1, err);
+            callback(err);
         } else {
             callback(null, body);
         }

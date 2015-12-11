@@ -5,6 +5,9 @@ var walk = require('../utils/walk').walk;
 var pathExifMapper = require('path-exif-mapper').PathExifMap;
 var async = require('async');
 var fs = require('fs');
+var path = require('path');
+var cp = require('child_process');
+
 
 var Analysis = function (collection) {
 	events.EventEmitter.call(this);
@@ -55,48 +58,54 @@ Analysis.prototype.analyze = function () {
 	var that = this;
 	that.processed = 0;
 
-	async.each(this.images, function (image, callback) {
-		console.log("Processing: " + image);
+	async.forEachLimit(this.images, 4, function (image, callback) {
+	
+			console.log("Processing: " + image);
 
-		var photo = {};
+			var photo = {};
 
-		async.parallel([
-			function (pcallback) {
-				pathExifMapper(image, function (err, srcImg, data) {
-					pcallback(err, data);
+			async.parallel([
+				function (pcallback) {
+					pathExifMapper(image, function (err, srcImg, data) {
+						pcallback(err, data);
 
-				});
-			},
-			function (pcallback) {
-				fs.stat(image, function (err, data) {
-					pcallback(err, data);
-				});
-			}
-		],
-			function (err, results) {
+					});
+				},
+				function (pcallback) {
+					fs.stat(image, function (err, data) {
+						pcallback(err, data);
+					});
+				}
+			],
+				function (err, results) {
 
-				photo.analysisId = that.id;
-				photo.exif = results[0];
-				photo.stat = results[1];
+					photo.analysisId = that.id;
+					photo.exif = results[0];
+					photo.stat = results[1];
 
-				var md5sum = crypto.createHash('md5');
-				md5sum.update(image);
+					var md5sum = crypto.createHash('md5');
+					md5sum.update(image);
 
-				photo.id = md5sum.digest('hex');
-				photo.path = image;
-
-				esclient.save("photos", photo, function (err, resp) {
-					//console.log("UPDATING ANALYSIS!", err, resp)
+					photo.id = md5sum.digest('hex');
+					photo.path = image;
 					
+					var esChild = cp.fork(path.resolve(__dirname, '../data/esclient'));
+					
+					esChild.send({
+						photo: photo
+					});
+					esChild.on('message',function(){
+						callback();
+					});
 					that.processed++;
 					that.emit('addedPhoto');
-					callback(err);
+					
+					
+
 				});
-			});
 
 	}, function (err) {
-		if (err)
-		{
+		if (err) {
 			console.warn("end of each", err);
 		}
 		that.status = "COMPLETE";
